@@ -1,29 +1,51 @@
 package org.dnyanyog.dto.request;
 
-import java.sql.Date;
-
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.sql.Date;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PatientRequest {
 
   private Long patientId;
 
+  @NotNull(message = "PatientName should not be Null")
+  @NotBlank(message = "PatientName should not be Blank")
   private String patientNameEnglish;
 
+  @NotNull(message = "PatientName should not be Null")
+  @NotBlank(message = "PatientName should not be Blank")
   private String patientNameMarathi;
 
+  @Min(value = 10, message = "Minium digits should be 10")
+  @Max(value = 10, message = "maximum digits should be 10")
   private String mobileNumber;
 
+  @NotNull(message = "Gender Should not be Null")
   private String gender;
+
+  @NotNull(message = "Address should not be null")
+  private String address;
+
+  private String patientStatus;
+
+  public String getPatientStatus() {
+    return patientStatus;
+  }
+
+  public void setPatientStatus(String patientStatus) {
+    this.patientStatus = patientStatus;
+  }
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date birthDate;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date firstExaminationDate;
-
-  private String address;
 
   public String getPatientNameEnglish() {
     return patientNameEnglish;

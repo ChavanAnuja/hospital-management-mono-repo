@@ -1,89 +1,109 @@
 package org.dnyanyog.dto.response;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.sql.Date;
-
 import org.springframework.stereotype.Component;
 
 @Component
 public class PatientData {
-	private Long patientId;
+  private Long patientId;
 
-	  private String patientNameEnglish;
+  @NotNull(message = "PatientName should not be Null")
+  @NotBlank(message = "PatientName should not be Blank")
+  private String patientNameEnglish;
 
-	  private String patientNameMarathi;
+  @NotNull(message = "PatientName should not be Null")
+  @NotBlank(message = "PatientName should not be Blank")
+  private String patientNameMarathi;
 
-	  private String mobileNumber;
+  @Min(value = 10, message = "Minium digits should be 10")
+  @Max(value = 10, message = "maximum digits should be 10")
+  private String mobileNumber;
 
-	  private String gender;
+  @NotNull(message = "gender should not be null")
+  private String gender;
 
-	  private Date birthDate;
+  private Date birthDate;
 
-	  private Date firstExaminationDate;
+  private Date firstExaminationDate;
 
-	  private String address;
+  @NotNull(message = "Address should not be null")
+  private String address;
 
-	  public String getPatientNameEnglish() {
-	    return patientNameEnglish;
-	  }
+  private String patientStatus;
 
-	  public void setPatientNameEnglish(String patientNameEnglish) {
-	    this.patientNameEnglish = patientNameEnglish;
-	  }
+  public String getPatientStatus() {
+    return patientStatus;
+  }
 
-	  public String getPatientNameMarathi() {
-	    return patientNameMarathi;
-	  }
+  public void setPatientStatus(String patientStatus) {
+    this.patientStatus = patientStatus;
+  }
 
-	  public void setPatientNameMarathi(String patientNameMarathi) {
-	    this.patientNameMarathi = patientNameMarathi;
-	  }
+  public String getPatientNameEnglish() {
+    return patientNameEnglish;
+  }
 
-	  public String getMobileNumber() {
-	    return mobileNumber;
-	  }
+  public void setPatientNameEnglish(String patientNameEnglish) {
+    this.patientNameEnglish = patientNameEnglish;
+  }
 
-	  public void setMobileNumber(String mobileNumber) {
-	    this.mobileNumber = mobileNumber;
-	  }
+  public String getPatientNameMarathi() {
+    return patientNameMarathi;
+  }
 
-	  public String getGender() {
-	    return gender;
-	  }
+  public void setPatientNameMarathi(String patientNameMarathi) {
+    this.patientNameMarathi = patientNameMarathi;
+  }
 
-	  public void setGender(String gender) {
-	    this.gender = gender;
-	  }
+  public String getMobileNumber() {
+    return mobileNumber;
+  }
 
-	  public Date getBirthDate() {
-	    return birthDate;
-	  }
+  public void setMobileNumber(String mobileNumber) {
+    this.mobileNumber = mobileNumber;
+  }
 
-	  public void setBirthDate(Date birthDate) {
-	    this.birthDate = birthDate;
-	  }
+  public String getGender() {
+    return gender;
+  }
 
-	  public Date getFirstExaminationDate() {
-	    return firstExaminationDate;
-	  }
+  public void setGender(String gender) {
+    this.gender = gender;
+  }
 
-	  public void setFirstExaminationDate(Date firstExaminationDate) {
-	    this.firstExaminationDate = firstExaminationDate;
-	  }
+  public Date getBirthDate() {
+    return birthDate;
+  }
 
-	  public String getAddress() {
-	    return address;
-	  }
+  public void setBirthDate(Date birthDate) {
+    this.birthDate = birthDate;
+  }
 
-	  public void setAddress(String address) {
-	    this.address = address;
-	  }
+  public Date getFirstExaminationDate() {
+    return firstExaminationDate;
+  }
 
-	  public Long getPatientId() {
-	    return patientId;
-	  }
+  public void setFirstExaminationDate(Date firstExaminationDate) {
+    this.firstExaminationDate = firstExaminationDate;
+  }
 
-	  public void setPatientId(Long patientId) {
-	    this.patientId = patientId;
-	  }
-	
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public Long getPatientId() {
+    return patientId;
+  }
+
+  public void setPatientId(Long patientId) {
+    this.patientId = patientId;
+  }
 }

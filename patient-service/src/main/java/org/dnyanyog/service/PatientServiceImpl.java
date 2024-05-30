@@ -1,58 +1,151 @@
 package org.dnyanyog.service;
 
 import java.util.Optional;
-
+import org.dnyanyog.common.ResponseCodes;
 import org.dnyanyog.dto.request.PatientRequest;
+import org.dnyanyog.dto.response.PatientData;
 import org.dnyanyog.dto.response.PatientResponse;
 import org.dnyanyog.entity.Patient;
 import org.dnyanyog.repository.PatientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PatientServiceImpl implements PatientService {
-    
-    private PatientRepo patientRepository;
-    private PatientResponse patientResponse;
 
-    @Autowired
-    public PatientServiceImpl(PatientRepo patientRepository, PatientResponse patientResponse) {
-        this.patientRepository = patientRepository;
-        this.patientResponse = patientResponse;
+  @Autowired
+  private PatientRepo patientRepository;
+  @Autowired
+  private PatientResponse patientResponse;
+
+  @Autowired
+  public PatientServiceImpl(PatientRepo patientRepository, PatientResponse patientResponse) {
+    this.patientRepository = patientRepository;
+    this.patientResponse = patientResponse;
+  }
+
+  @Override
+  public ResponseEntity<PatientResponse> addPatientInfo(PatientRequest request) {
+
+    patientResponse.setData(new PatientData());
+
+    if (patientRepository.existsByMobileNumber(request.getMobileNumber())) {
+
+      patientResponse = new PatientResponse();
+      patientResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+      patientResponse.setMessage(ResponseCodes.ADD_PATIENT_FAILED.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(patientResponse);
     }
 
-    @Override
-    public Optional<PatientResponse> addPatientDetails(PatientRequest request) throws Exception {
-        Patient patient = new Patient();
-        patient.setAddress(request.getAddress());
-        patient.setBirthDate(request.getBirthDate());
-        patient.setFirstExaminationDate(request.getFirstExaminationDate());
-        patient.setGender(request.getGender());
-        patient.setMobileNumber(request.getMobileNumber());
-        patient.setPatientId(request.getPatientId());  // Assuming there's a way to set this
-        patient.setPatientNameEnglish(request.getPatientNameEnglish());
-        patient.setPatientNameMarathi(request.getPatientNameMarathi());
+    Patient patient =
+        Patient.getInstance()
+            .setAddress(request.getAddress())
+            .setBirthDate(request.getBirthDate())
+            .setFirstExaminationDate(request.getFirstExaminationDate())
+            .setGender(request.getGender())
+            .setMobileNumber(request.getMobileNumber())
+            .setPatientId(request.getPatientId())
+            .setPatientNameEnglish(request.getPatientNameEnglish())
+            .setPatientNameMarathi(request.getPatientNameMarathi());
 
-        patient = patientRepository.save(patient);
+    patient = patientRepository.save(patient);
 
-        patientResponse.setStatus("Success");;
-        patientResponse.setMessage("Patient Added Successfully");
-        return Optional.of(patientResponse);
- 
+    patientResponse.setStatus(HttpStatus.CREATED.value());
+    patientResponse.setMessage(ResponseCodes.ADD_PATIENT.getMessage());
+
+    patientResponse.getData().setPatientId(patient.getPatientId());
+    patientResponse.getData().setPatientNameEnglish(patient.getPatientNameEnglish());
+    patientResponse.getData().setPatientNameMarathi(patient.getPatientNameMarathi());
+    patientResponse.getData().setGender(patient.getGender());
+    patientResponse.getData().setMobileNumber(patient.getMobileNumber());
+    patientResponse.getData().setAddress(patient.getAddress());
+    patientResponse.getData().setBirthDate(request.getBirthDate());
+    patientResponse.getData().setFirstExaminationDate(patient.getFirstExaminationDate());
+    patientResponse.getData().setPatientStatus(patient.getPatientStatus());
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(patientResponse);
+  }
+
+  public PatientResponse deletePatient(Long patientId) {
+    Optional<Patient> existingPatient = patientRepository.findByPatientId(patientId);
+
+    PatientResponse patientResponse = new PatientResponse();
+
+    if (existingPatient.isPresent()) {
+      Patient patientToDelete = (existingPatient).get();
+      patientToDelete.setPatientStatus(ResponseCodes.INACTIVE_PATIENT.getMessage());
+      patientRepository.save(patientToDelete);
+
+      patientResponse.setStatus(HttpStatus.OK.value());
+      patientResponse.setMessage(ResponseCodes.INACTIVE_PATIENT_STATUS.getMessage());
+    } else {
+      patientResponse.setStatus(HttpStatus.NOT_FOUND.value());
+      patientResponse.setMessage(ResponseCodes.PATIENT_NOT_FOUND.getMessage());
     }
-    
-    @Override
-    public Optional<PatientResponse> getPatientDetails(Long patientId) {
-        return patientRepository.findById(patientId).map(patient -> {
-            PatientResponse response = new PatientResponse();
-            response.setStatus("Success");
-            response.setMessage("Patient found successfully");
-            return response;
-        });
+
+    return patientResponse;
+  }
+
+  @Override
+  public PatientResponse searchPatient(Long patientId) {
+    Optional<Patient> optionalPatient = patientRepository.findByPatientId(patientId);
+
+    PatientResponse patientResponse = PatientResponse.getInstance();
+    if (optionalPatient.isEmpty()) {
+      patientResponse.setMessage(ResponseCodes.SEARCH_PATIENT_FAILED.getMessage());
+      patientResponse.setStatus(HttpStatus.NOT_FOUND.value());
+    } else {
+      Patient patients = optionalPatient.get();
+      if (patientResponse.getData() == null) {
+        patientResponse.setData(new PatientData());
+      }
+      populatePatientResponse(patientResponse, patients);
+      patientResponse.setMessage(ResponseCodes.SEARCH_PATIENT.getMessage());
+      patientResponse.setStatus(HttpStatus.FOUND.value());
     }
-    
-    public Optional<PatientResponse> deletePatient(Long patientId) {
-        patientRepository.deleteById(patientId);
-    return Optional.empty();
+    return patientResponse;
+  }
+
+  private void populatePatientResponse(PatientResponse response, Patient patient) {
+    response.getData().setAddress(patient.getAddress());
+    response.getData().setBirthDate(patient.getBirthDate());
+    response.getData().setFirstExaminationDate(patient.getFirstExaminationDate());
+    response.getData().setGender(patient.getGender());
+    response.getData().setMobileNumber(patient.getMobileNumber());
+    response.getData().setPatientId(patient.getPatientId());
+    response.getData().setPatientNameEnglish(patient.getPatientNameEnglish());
+    response.getData().setPatientNameMarathi(patient.getPatientNameMarathi());
+    response.getData().setPatientStatus(patient.getPatientStatus());
+  }
+
+  public PatientResponse updatePatient(Long patientId, PatientRequest request) {
+    Optional<Patient> optionalPatient = patientRepository.findByPatientId(patientId);
+
+    PatientResponse patientResponse = PatientResponse.getInstance();
+    if (optionalPatient.isEmpty()) {
+      patientResponse.setStatus(HttpStatus.NOT_FOUND.value());
+      patientResponse.setMessage(ResponseCodes.UPDATE_PATIENT_FAILED.getMessage());
+    } else {
+      Patient patient =
+          Patient.getInstance()
+              .setAddress(request.getAddress())
+              .setMobileNumber(request.getMobileNumber())
+              .setBirthDate(request.getBirthDate())
+              .setFirstExaminationDate(request.getFirstExaminationDate())
+              .setGender(request.getGender())
+              .setPatientNameEnglish(request.getPatientNameEnglish())
+              .setPatientNameMarathi(request.getPatientNameMarathi())
+              .setPatientStatus(request.getPatientStatus());
+
+      patientRepository.save(patient);
+
+      populatePatientResponse(patientResponse, patient);
+      patientResponse.setMessage(ResponseCodes.UPDATE_PATIENT.getMessage());
+      patientResponse.setStatus(HttpStatus.FOUND.value());
     }
+
+    return patientResponse;
+  }
 }

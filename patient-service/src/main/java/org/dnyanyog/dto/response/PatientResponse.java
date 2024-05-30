@@ -4,24 +4,35 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PatientResponse {
-  private String status;
+  private int status;
   private String message;
   private PatientData data;
 
-  
-  public String getStatus() {
-return status;}
+  public PatientResponse() {
+    this.data = new PatientData(); // Initialize the data field
+  }
 
-public void setStatus(String status) {
-this.status = status;}
+  public static PatientResponse getInstance() {
+    return new PatientResponse();
+  }
 
-public String getMessage() {
-return message;}
+  public int getStatus() {
+    return status;
+  }
 
-public void setMessage(String message) {
-this.message = message;}
+  public void setStatus(int status) {
+    this.status = status;
+  }
 
-public PatientData getData() {
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public PatientData getData() {
     return data;
   }
 

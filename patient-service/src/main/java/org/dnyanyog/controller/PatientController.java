@@ -4,14 +4,13 @@ import org.dnyanyog.dto.request.PatientRequest;
 import org.dnyanyog.dto.response.PatientResponse;
 import org.dnyanyog.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 public class PatientController {
@@ -24,18 +23,28 @@ public class PatientController {
   }
 
   @PostMapping("/api/v1/patient/add")
-  public Optional<PatientResponse> addPatient(@RequestBody PatientRequest request)
+  public ResponseEntity<PatientResponse> addPatient(@RequestBody PatientRequest patientRequest)
       throws Exception {
-    return patientService.addPatientDetails(request);
+
+    return patientService.addPatientInfo(patientRequest);
   }
 
-  @GetMapping("/api/v1/patient/{patientId}")
-  public Optional<PatientResponse> getPatient(@PathVariable Long patientId) {
-    return patientService.getPatientDetails(patientId);
+  @DeleteMapping(path = "/api/v1/patient/{patientId}")
+  public ResponseEntity<PatientResponse> deletePatient(@PathVariable Long patientId) {
+    PatientResponse patientResponse = patientService.deletePatient(patientId);
+    patientService.deletePatient(patientId);
+    return ResponseEntity.status(patientResponse.getStatus()).body(patientResponse);
   }
-  
-  @DeleteMapping("/api/v1/patient/{patientId}")
-  public void deletePatient(@PathVariable Long patientId) {
-      patientService.deletePatient(patientId);
+
+  @GetMapping(path = "/api/v1/patient/{patientId}")
+  public PatientResponse searchPatient(@PathVariable Long patientId) {
+
+    return patientService.searchPatient(patientId);
+  }
+
+  @PostMapping("/api/v1/patient/{patientId}")
+  public PatientResponse updatePatient(
+      @PathVariable long patientId, @RequestBody PatientRequest request) {
+    return patientService.updatePatient(patientId, request);
   }
 }
