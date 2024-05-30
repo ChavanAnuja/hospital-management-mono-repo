@@ -1,16 +1,20 @@
 package org.dnyanyog.dto.request;
 
-import java.sql.Date;
-
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.sql.Date;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AppointmentRequest {
 
   private Long appointmentId;
 
+  @NotNull(message = "PatientName should not be Null")
+  @NotBlank(message = "PatientName should not be Blank")
   private String patientNameEnglish;
 
   private Long patientId;
@@ -18,7 +22,19 @@ public class AppointmentRequest {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date examinationDate;
 
+  @NotNull(message = "Appointment Time Should not be Null")
   private String appointmentTime;
+
+  @NotNull(message = "Appointment Status Should not be Null")
+  private String appointmentStatus;
+
+  public String getAppointmentStatus() {
+    return appointmentStatus;
+  }
+
+  public void setAppointmentStatus(String appointmentStatus) {
+    this.appointmentStatus = appointmentStatus;
+  }
 
   public Long getAppointmentId() {
     return appointmentId;

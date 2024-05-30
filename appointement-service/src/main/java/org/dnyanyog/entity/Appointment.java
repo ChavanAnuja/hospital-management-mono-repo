@@ -1,14 +1,14 @@
 package org.dnyanyog.entity;
 
-import java.sql.Date;
-
-import org.springframework.stereotype.Component;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.sql.Date;
+import org.springframework.stereotype.Component;
 
 @Component
 @Entity
@@ -17,8 +17,9 @@ public class Appointment {
 
   @Column
   @Id
-  @SequenceGenerator(name = "appointment_seq", sequenceName = "appointment_seq", allocationSize = 1)
-  private long AppointmentId;
+ // @SequenceGenerator(name = "appointment_seq", sequenceName = "appointment_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long appointmentId;
 
   @Column private String patientNameEnglish;
 
@@ -30,51 +31,61 @@ public class Appointment {
 
   @Column private String appointmentStatus;
 
+  public static Appointment getInstance() {
+    return new Appointment();
+  }
+
   public String getAppointmentStatus() {
     return appointmentStatus;
   }
 
-  public void setAppointmentStatus(String appointmentStatus) {
+  public Appointment setAppointmentStatus(String appointmentStatus) {
     this.appointmentStatus = appointmentStatus;
+    return this;
   }
 
   public long getAppointmentId() {
-    return AppointmentId;
+    return appointmentId;
   }
 
-  public void setAppointmentId(long appointmentId) {
-    AppointmentId = appointmentId;
+  public Appointment setAppointmentId(long appointmentId) {
+    this.appointmentId = appointmentId;
+    return this;
   }
 
   public String getPatientNameEnglish() {
     return patientNameEnglish;
   }
 
-  public void setPatientNameEnglish(String patientNameEnglish) {
+  public Appointment setPatientNameEnglish(String patientNameEnglish) {
     this.patientNameEnglish = patientNameEnglish;
+    return this;
   }
 
   public Long getPatientId() {
     return patientId;
   }
 
-  public void setPatientId(Long patientId) {
+  public Appointment setPatientId(Long patientId) {
     this.patientId = patientId;
+    return this;
   }
 
   public Date getExaminationDate() {
     return examinationDate;
   }
 
-  public void setExaminationDate(Date examinationDate) {
+  public Appointment setExaminationDate(Date examinationDate) {
     this.examinationDate = examinationDate;
+    return this;
   }
 
   public String getAppointmentTime() {
     return appointmentTime;
   }
 
-  public void setAppointmentTime(String appointmentTime) {
+  public Appointment setAppointmentTime(String appointmentTime) {
     this.appointmentTime = appointmentTime;
+    return this;
   }
 }

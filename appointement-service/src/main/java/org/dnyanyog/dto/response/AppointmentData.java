@@ -1,7 +1,8 @@
 package org.dnyanyog.dto.response;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.sql.Date;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,12 +10,16 @@ public class AppointmentData {
 
   private Long appointmentId;
 
+  @NotNull(message = "Patientname should not be Null")
+  @NotBlank(message = "Patientname should not be Blank")
   private String patientNameEnglish;
 
   private Long patientId;
 
+  @NotNull(message = "ExaminationDate should not be Null")
   private Date examinationDate;
 
+  @NotNull(message = "Time should not be Null")
   private String appointmentTime;
 
   private String appointmentStatus;

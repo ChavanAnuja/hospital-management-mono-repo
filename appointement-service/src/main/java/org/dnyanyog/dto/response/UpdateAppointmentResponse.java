@@ -1,11 +1,16 @@
 package org.dnyanyog.dto.response;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UpdateAppointmentResponse {
+  @NotNull(message = "Status should not be Null")
   private int status;
+
+  @NotNull(message = "Message should not be Null")
   private String message;
+
   private UpdateAppointmentData data;
 
   public int getStatus() {
@@ -31,7 +36,8 @@ public class UpdateAppointmentResponse {
   public void setData(UpdateAppointmentData data) {
     this.data = data;
   }
+
   public static UpdateAppointmentResponse getInstance() {
-	    return new UpdateAppointmentResponse();
-	  }
+    return new UpdateAppointmentResponse();
+  }
 }

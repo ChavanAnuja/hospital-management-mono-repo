@@ -1,12 +1,17 @@
 package org.dnyanyog.dto.response;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataByPatientIdResponse {
 
+  @NotNull(message = "Status should not be Null")
   private int status;
+
+  @NotNull(message = "Message should not be Null")
   private String message;
+
   private DataByPatientId data;
 
   public int getStatus() {
@@ -32,6 +37,4 @@ public class DataByPatientIdResponse {
   public void setData(DataByPatientId data) {
     this.data = data;
   }
-  
- 
 }

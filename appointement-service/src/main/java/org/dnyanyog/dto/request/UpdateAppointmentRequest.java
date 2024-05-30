@@ -1,69 +1,77 @@
 package org.dnyanyog.dto.request;
 
-import java.sql.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.sql.Date;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UpdateAppointmentRequest {
-	 private Long appointmentId;
+  private Long appointmentId;
 
-	  private String patientNameEnglish;
+  @NotNull(message = "PatientName should not be Null")
+  @NotBlank(message = "PatientName should not be Blank")
+  private String patientNameEnglish;
 
-	  private Long patientId;
+  private Long patientId;
 
-	  private Date examinationDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private Date examinationDate;
 
-	  private String appointmentTime;
+  @NotNull(message = "Appointment Time Should not be Null")
+  private String appointmentTime;
 
-	  private String appointmentStatus;
+  @NotNull(message = "Appointment Status Should not be Null")
+  private String appointmentStatus;
 
-	  public String getAppointmentStatus() {
-	    return appointmentStatus;
-	  }
+  public String getAppointmentStatus() {
+    return appointmentStatus;
+  }
 
-	  public void setAppointmentStatus(String appointmentStatus) {
-	    this.appointmentStatus = appointmentStatus;
-	  }
+  public void setAppointmentStatus(String appointmentStatus) {
+    this.appointmentStatus = appointmentStatus;
+  }
 
-	  public Long getAppointmentId() {
-	    return appointmentId;
-	  }
+  public Long getAppointmentId() {
+    return appointmentId;
+  }
 
-	  public void setAppointmentId(Long appointmentId) {
-	    this.appointmentId = appointmentId;
-	  }
+  public void setAppointmentId(Long appointmentId) {
+    this.appointmentId = appointmentId;
+  }
 
-	  public String getPatientNameEnglish() {
-	    return patientNameEnglish;
-	  }
+  public String getPatientNameEnglish() {
+    return patientNameEnglish;
+  }
 
-	  public void setPatientNameEnglish(String patientNameEnglish) {
-	    this.patientNameEnglish = patientNameEnglish;
-	  }
+  public void setPatientNameEnglish(String patientNameEnglish) {
+    this.patientNameEnglish = patientNameEnglish;
+  }
 
-	  public Long getPatientId() {
-	    return patientId;
-	  }
+  public Long getPatientId() {
+    return patientId;
+  }
 
-	  public void setPatientId(Long patientId) {
-	    this.patientId = patientId;
-	  }
+  public void setPatientId(Long patientId) {
+    this.patientId = patientId;
+  }
 
-	  public Date getExaminationDate() {
-	    return examinationDate;
-	  }
+  public Date getExaminationDate() {
+    return examinationDate;
+  }
 
-	  public void setExaminationDate(Date examinationDate) {
-	    this.examinationDate = examinationDate;
-	  }
+  public void setExaminationDate(Date examinationDate) {
+    this.examinationDate = examinationDate;
+  }
 
-	  public String getAppointmentTime() {
-	    return appointmentTime;
-	  }
+  public String getAppointmentTime() {
+    return appointmentTime;
+  }
 
-	  public void setAppointmentTime(String appointmentTime) {
-	    this.appointmentTime = appointmentTime;
-	  }
-	
+  public void setAppointmentTime(String appointmentTime) {
+    this.appointmentTime = appointmentTime;
+  }
 }
